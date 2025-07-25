@@ -53,7 +53,7 @@ afterAll(async () => {
     try {
         // Clean up test user if needed
         await UserModel.destroy({ where: { email: TEST_USER.email } });
-        
+
         // Close the database connection
         await sequelize.close();
         console.log('Database connection closed successfully.');
@@ -109,10 +109,10 @@ describe('GET /api/profile', () => {
         // Create an expired token
         const JWT_SECRET = process.env.JWT_SECRET || 'nutech-integrasi-secret-key';
         const expiredToken = jwt.sign(
-            { 
+            {
                 data: 'profile-test@nutech-integrasi.com',
                 exp: Math.floor(Date.now() / 1000) - 3600 // Expired 1 hour ago
-            }, 
+            },
             JWT_SECRET
         );
 
@@ -176,19 +176,19 @@ describe('PUT /api/profile/image', () => {
     // Create a small test image
     const createTestImage = () => {
         const testImagePath = path.join(__dirname, 'test-image.jpg');
-        
+
         // Check if the test image already exists
         if (!fs.existsSync(testImagePath)) {
             // Create a minimal JPEG file (just the header)
             const jpegHeader = Buffer.from([
-                0xff, 0xd8, 0xff, 0xe0, 0x00, 0x10, 0x4a, 0x46, 
-                0x49, 0x46, 0x00, 0x01, 0x01, 0x01, 0x00, 0x48, 
-                0x00, 0x48, 0x00, 0x00, 0xff, 0xdb, 0x00, 0x43, 
+                0xff, 0xd8, 0xff, 0xe0, 0x00, 0x10, 0x4a, 0x46,
+                0x49, 0x46, 0x00, 0x01, 0x01, 0x01, 0x00, 0x48,
+                0x00, 0x48, 0x00, 0x00, 0xff, 0xdb, 0x00, 0x43,
                 0x00
             ]);
             fs.writeFileSync(testImagePath, jpegHeader);
         }
-        
+
         return testImagePath;
     };
 

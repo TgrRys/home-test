@@ -34,7 +34,7 @@ class UpdateProfileImage {
 
             // Find user by email
             const user = await this.userRepository.findByEmail(email);
-            
+
             if (!user) {
                 const error = new Error('User tidak ditemukan');
                 error.statusCode = 404;
@@ -49,7 +49,7 @@ class UpdateProfileImage {
 
             // For this example, we'll just use a fake URL based on the original filename
             const imageUrl = `https://yoururlapi.com/${Date.now()}-${fileData.originalname}`;
-            
+
             // Update user's profile image
             user.profile_image = imageUrl;
             user.updatedAt = new Date();

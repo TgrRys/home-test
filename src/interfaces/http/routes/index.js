@@ -38,11 +38,11 @@ router.get('/profile', authenticateJWT, (req, res, next) => {
     const ProfileController = require('../controllers/ProfileController');
     const GetUserProfile = require('../../../application/use_cases/GetUserProfile');
     const PostgresUserRepository = require('../../../infrastructure/repositories/PostgresUserRepository');
-    
+
     const userRepository = new PostgresUserRepository();
     const getUserProfileUseCase = new GetUserProfile(userRepository);
     const profileController = new ProfileController(getUserProfileUseCase);
-    
+
     profileController.getProfile(req, res, next);
 });
 
@@ -51,27 +51,27 @@ router.put('/profile/update', authenticateJWT, (req, res, next) => {
     const ProfileController = require('../controllers/ProfileController');
     const UpdateUserProfile = require('../../../application/use_cases/UpdateUserProfile');
     const PostgresUserRepository = require('../../../infrastructure/repositories/PostgresUserRepository');
-    
+
     const userRepository = new PostgresUserRepository();
     const updateUserProfileUseCase = new UpdateUserProfile(userRepository);
     const profileController = new ProfileController(null, updateUserProfileUseCase);
-    
+
     profileController.updateProfile(req, res, next);
 });
 
 // Update profile image route (protected by JWT authentication)
-router.put('/profile/image', 
-    authenticateJWT, 
-    processSingleImageUpload('file'), 
+router.put('/profile/image',
+    authenticateJWT,
+    processSingleImageUpload('file'),
     (req, res, next) => {
         const ProfileController = require('../controllers/ProfileController');
         const UpdateProfileImage = require('../../../application/use_cases/UpdateProfileImage');
         const PostgresUserRepository = require('../../../infrastructure/repositories/PostgresUserRepository');
-        
+
         const userRepository = new PostgresUserRepository();
         const updateProfileImageUseCase = new UpdateProfileImage(userRepository);
         const profileController = new ProfileController(null, null, updateProfileImageUseCase);
-        
+
         profileController.updateProfileImage(req, res, next);
     }
 );

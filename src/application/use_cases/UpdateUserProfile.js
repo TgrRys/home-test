@@ -25,7 +25,7 @@ class UpdateUserProfile {
         try {
             // Find user by email
             const user = await this.userRepository.findByEmail(email);
-            
+
             if (!user) {
                 const error = new Error('User tidak ditemukan');
                 error.statusCode = 404;

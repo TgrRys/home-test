@@ -41,12 +41,12 @@ class PostgresUserRepository extends UserRepository {
             createdAt: entity.createdAt,
             updatedAt: entity.updatedAt
         };
-        
+
         // Only include ID if it's not null
         if (entity.id) {
             model.id = entity.id;
         }
-        
+
         return model;
     }
 

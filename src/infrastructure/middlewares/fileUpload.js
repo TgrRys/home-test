@@ -15,7 +15,7 @@ const storage = multer.memoryStorage();
  * @returns {Function} Multer middleware configured for image uploads
  */
 const imageUpload = () => {
-    const upload = multer({ 
+    const upload = multer({
         storage: storage,
         fileFilter: (req, file, cb) => {
             // Accept only jpeg and png
@@ -28,7 +28,7 @@ const imageUpload = () => {
                 error.errorCode = 102;
                 cb(error, false);
             }
-        } 
+        }
     });
 
     return upload;
@@ -41,7 +41,7 @@ const imageUpload = () => {
  */
 const processSingleImageUpload = (fieldName) => {
     const uploader = imageUpload();
-    
+
     return (req, res, next) => {
         uploader.single(fieldName)(req, res, (err) => {
             if (err) {

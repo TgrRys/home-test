@@ -15,7 +15,7 @@ async function migrate() {
             ADD COLUMN IF NOT EXISTS profile_image VARCHAR(255) 
             DEFAULT 'https://yoururlapi.com/profile.jpeg'
         `);
-        
+
         console.log('Migration completed successfully.');
         process.exit(0);
     } catch (error) {
