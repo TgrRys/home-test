@@ -1,0 +1,484 @@
+{
+    "info": {
+        "name": "Home Test API",
+        "description": "Complete API collection for Home Test application with authentication, transactions, and profile management",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+        "_postman_id": "home-test-api-collection",
+        "version": "1.0.0"
+    },
+    "auth": {
+        "type": "bearer",
+        "bearer": [
+            {
+                "key": "token",
+                "value": "{{jwt_token}}",
+                "type": "string"
+            }
+        ]
+    },
+    "variable": [
+        {
+            "key": "base_url",
+            "value": "http://localhost:3000/api",
+            "type": "string"
+        },
+        {
+            "key": "jwt_token",
+            "value": "",
+            "type": "string"
+        },
+        {
+            "key": "user_email",
+            "value": "test@example.com",
+            "type": "string"
+        },
+        {
+            "key": "user_password",
+            "value": "password123",
+            "type": "string"
+        }
+    ],
+    "item": [
+        {
+            "name": "Health Check",
+            "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                    "raw": "{{base_url}}/health",
+                    "host": [
+                        "{{base_url}}"
+                    ],
+                    "path": [
+                        "health"
+                    ]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "Authentication",
+            "item": [
+                {
+                    "name": "Register User",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Status code is 200\", function () {",
+                                    "    pm.response.to.have.status(200);",
+                                    "});",
+                                    "",
+                                    "pm.test(\"Response has correct structure\", function () {",
+                                    "    const jsonData = pm.response.json();",
+                                    "    pm.expect(jsonData).to.have.property('status');",
+                                    "    pm.expect(jsonData).to.have.property('message');",
+                                    "    pm.expect(jsonData).to.have.property('data');",
+                                    "});"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"email\": \"{{user_email}}\",\n  \"first_name\": \"Test\",\n  \"last_name\": \"User\",\n  \"password\": \"{{user_password}}\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/registration",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "registration"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Login User",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Status code is 200\", function () {",
+                                    "    pm.response.to.have.status(200);",
+                                    "});",
+                                    "",
+                                    "pm.test(\"Response contains token\", function () {",
+                                    "    const jsonData = pm.response.json();",
+                                    "    pm.expect(jsonData.data).to.have.property('token');",
+                                    "    ",
+                                    "    // Store the token for future requests",
+                                    "    pm.collectionVariables.set('jwt_token', jsonData.data.token);",
+                                    "});"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"email\": \"{{user_email}}\",\n  \"password\": \"{{user_password}}\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/login",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "login"
+                            ]
+                        }
+                    },
+                    "response": []
+                }
+            ]
+        },
+        {
+            "name": "Profile Management",
+            "item": [
+                {
+                    "name": "Get Profile",
+                    "request": {
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{jwt_token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/profile",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "profile"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Update Profile",
+                    "request": {
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{jwt_token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"first_name\": \"Updated First\",\n  \"last_name\": \"Updated Last\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/profile/update",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "profile",
+                                "update"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Update Profile Image",
+                    "request": {
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{jwt_token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "method": "PUT",
+                        "header": [],
+                        "body": {
+                            "mode": "formdata",
+                            "formdata": [
+                                {
+                                    "key": "file",
+                                    "type": "file",
+                                    "src": []
+                                }
+                            ]
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/profile/image",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "profile",
+                                "image"
+                            ]
+                        }
+                    },
+                    "response": []
+                }
+            ]
+        },
+        {
+            "name": "Information",
+            "item": [
+                {
+                    "name": "Get Banners",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/banner",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "banner"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get Services",
+                    "request": {
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{jwt_token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/services",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "services"
+                            ]
+                        }
+                    },
+                    "response": []
+                }
+            ]
+        },
+        {
+            "name": "Transaction",
+            "item": [
+                {
+                    "name": "Get Balance",
+                    "request": {
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{jwt_token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/balance",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "balance"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Top Up Balance",
+                    "request": {
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{jwt_token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"top_up_amount\": 100000\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/topup",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "topup"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Create Transaction",
+                    "request": {
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{jwt_token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"service_code\": \"PLN\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/transaction",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "transaction"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get Transaction History",
+                    "request": {
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{jwt_token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/transaction/history",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "transaction",
+                                "history"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get Transaction History with Pagination",
+                    "request": {
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{jwt_token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/transaction/history?offset=0&limit=3",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "transaction",
+                                "history"
+                            ],
+                            "query": [
+                                {
+                                    "key": "offset",
+                                    "value": "0"
+                                },
+                                {
+                                    "key": "limit",
+                                    "value": "3"
+                                }
+                            ]
+                        }
+                    },
+                    "response": []
+                }
+            ]
+        }
+    ]
+}

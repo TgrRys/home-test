@@ -24,8 +24,7 @@ class ProfileController {
      */
     async getProfile(req, res, next) {
         try {
-            // Email comes from JWT token validation in middleware
-            const email = req.userEmail;
+            const email = req.user.email;
 
             if (!email) {
                 throw new Error('Email not found in token');
@@ -36,9 +35,8 @@ class ProfileController {
         } catch (error) {
             console.error('Profile error:', error);
 
-            // Format error response according to the API spec
             const errorResponse = {
-                status: error.errorCode || 999, // Default error code
+                status: error.errorCode || 999, 
                 message: error.message || 'An unexpected error occurred',
                 data: null
             };
@@ -59,8 +57,7 @@ class ProfileController {
                 throw new Error('Update profile use case not initialized');
             }
 
-            // Email comes from JWT token validation in middleware
-            const email = req.userEmail;
+            const email = req.user.email;
 
             if (!email) {
                 throw new Error('Email not found in token');
@@ -73,9 +70,8 @@ class ProfileController {
         } catch (error) {
             console.error('Update profile error:', error);
 
-            // Format error response according to the API spec
             const errorResponse = {
-                status: error.errorCode || 999, // Default error code
+                status: error.errorCode || 999,
                 message: error.message || 'An unexpected error occurred',
                 data: null
             };
@@ -96,8 +92,7 @@ class ProfileController {
                 throw new Error('Update profile image use case not initialized');
             }
 
-            // Email comes from JWT token validation in middleware
-            const email = req.userEmail;
+            const email = req.user.email;
 
             if (!email) {
                 throw new Error('Email not found in token');
@@ -117,9 +112,8 @@ class ProfileController {
         } catch (error) {
             console.error('Update profile image error:', error);
 
-            // Format error response according to the API spec
             const errorResponse = {
-                status: error.errorCode || 999, // Default error code
+                status: error.errorCode || 999,
                 message: error.message || 'An unexpected error occurred',
                 data: null
             };

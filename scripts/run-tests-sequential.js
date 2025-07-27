@@ -1,13 +1,11 @@
-// Run tests sequentially
 const { execSync } = require('child_process');
 
-// Define the test files to run in sequence
 const testFiles = [
-    'tests/integration/auth.test.js',
-    'tests/integration/profile.test.js'
+    'tests/integration/membership.test.js',
+    'tests/integration/information.test.js',
+    'tests/integration/transaction.test.js',
 ];
 
-// Run each test file sequentially
 testFiles.forEach(testFile => {
     console.log(`Running ${testFile}...`);
     try {

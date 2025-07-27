@@ -20,17 +20,15 @@ class GetUserProfile {
      */
     async execute(email) {
         try {
-            // Find user by email
             const user = await this.userRepository.findByEmail(email);
 
             if (!user) {
                 const error = new Error('User tidak ditemukan');
                 error.statusCode = 404;
-                error.errorCode = 109; // Custom error code for user not found
+                error.errorCode = 109; 
                 throw error;
             }
 
-            // Return formatted user profile
             return {
                 status: 0,
                 message: "Sukses",
@@ -42,10 +40,9 @@ class GetUserProfile {
                 }
             };
         } catch (error) {
-            // Make sure error has proper codes
             if (!error.statusCode) {
                 error.statusCode = 500;
-                error.errorCode = 999; // Default error code
+                error.errorCode = 999;
             }
             throw error;
         }

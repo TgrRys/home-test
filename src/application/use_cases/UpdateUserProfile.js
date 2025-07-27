@@ -23,40 +23,36 @@ class UpdateUserProfile {
      */
     async execute(email, userData) {
         try {
-            // Find user by email
             const user = await this.userRepository.findByEmail(email);
 
             if (!user) {
                 const error = new Error('User tidak ditemukan');
                 error.statusCode = 404;
-                error.errorCode = 109; // Custom error code for user not found
+                error.errorCode = 109;
                 throw error;
             }
 
-            // Update user fields
-            user.first_name = userData.first_name || user.first_name;
-            user.last_name = userData.last_name || user.last_name;
-            user.updatedAt = new Date();
+            const updateData = {
+                first_name: userData.first_name || user.first_name,
+                last_name: userData.last_name || user.last_name
+            };
 
-            // Save the updated user
-            await this.userRepository.update(user.id, user);
+            const updatedUser = await this.userRepository.update(user.id, updateData);
 
-            // Return formatted updated user profile
             return {
                 status: 0,
                 message: "Update Pofile berhasil",
                 data: {
-                    email: user.email,
-                    first_name: user.first_name,
-                    last_name: user.last_name,
-                    profile_image: user.profile_image
+                    email: updatedUser.email,
+                    first_name: updatedUser.first_name,
+                    last_name: updatedUser.last_name,
+                    profile_image: updatedUser.profile_image
                 }
             };
         } catch (error) {
-            // Make sure error has proper codes
             if (!error.statusCode) {
                 error.statusCode = 500;
-                error.errorCode = 999; // Default error code
+                error.errorCode = 999;
             }
             throw error;
         }

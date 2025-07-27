@@ -1,60 +1,55 @@
-require('dotenv').config();
 const { Database } = require('../src/infrastructure/database/connection');
 const DatabaseSchema = require('../src/infrastructure/database/schema/DatabaseSchema');
-const UserDatabaseOperations = require('../src/infrastructure/database/operations/UserDatabaseOperations');
 const PostgresBannerRepository = require('../src/infrastructure/repositories/PostgresBannerRepository');
 const PostgresServiceRepository = require('../src/infrastructure/repositories/PostgresServiceRepository');
 const Banner = require('../src/domain/entities/Banner');
 const Service = require('../src/domain/entities/Service');
 
-async function initializeDatabase() {
+/**
+ * Initialize test database with seed data
+ */
+async function initializeTestDatabase() {
     try {
-        console.log('Database config:', {
-            host: process.env.DB_HOST,
-            port: process.env.DB_PORT,
-            database: process.env.DB_NAME,
-            username: process.env.DB_USER
-        });
+        console.log('Initializing test database...');
 
-        await Database.query('SELECT NOW()');
-        console.log('Database connection established successfully');
+        await Database.connect();
+        console.log('Database connection established.');
 
         await DatabaseSchema.createAllTables();
-        console.log('Database tables created successfully');
+        console.log('Database tables created.');
 
-        await seedData();
-        console.log('Data seeded successfully');
+        await Database.query('DELETE FROM banners');
+        await Database.query('DELETE FROM services');
+        await Database.query('DELETE FROM users');
+        console.log('Existing test data cleared.');
 
-        await Database.close();
-        console.log('Database connection closed');
+        await seedBannerData();
+        console.log('Banner data seeded.');
 
-        process.exit(0);
+        await seedServiceData();
+        console.log('Service data seeded.');
+
+        console.log('Test database initialization completed successfully.');
     } catch (error) {
-        console.error('Error initializing database:', error);
-        await Database.close();
-        process.exit(1);
+        console.error('Failed to initialize test database:', error);
+        throw error;
     }
 }
 
-async function seedData() {
-    const bannerRepository = new PostgresBannerRepository(Database);
-    const serviceRepository = new PostgresServiceRepository(Database);
-
+/**
+ * Close database connection
+ */
+async function closeDatabaseConnection() {
     try {
-        const adminUser = await UserDatabaseOperations.create({
-            first_name: 'Admin',
-            last_name: 'User',
-            email: 'admin@example.com',
-            password: 'password123'
-        });
-        console.log('Initial user data seeded successfully:', adminUser);
+        await Database.close();
+        console.log('Database connection closed.');
     } catch (error) {
-        if (error.code === '23505') {
-            console.log('Admin user already exists, skipping...');
-        } else {
-            throw error;
-        }
+        console.error('Failed to close database connection:', error);
     }
+}
+
+async function seedBannerData() {
+    const bannerRepository = new PostgresBannerRepository(Database);
 
     const bannerData = [
         { banner_name: 'Banner 1', banner_image: 'https://nutech-integrasi.app/dummy.jpg', description: 'Lerem Ipsum Dolor sit amet' },
@@ -75,7 +70,10 @@ async function seedData() {
             }
         }
     }
-    console.log('Banner data seeded successfully');
+}
+
+async function seedServiceData() {
+    const serviceRepository = new PostgresServiceRepository(Database);
 
     const serviceData = [
         { service_code: 'PAJAK', service_name: 'Pajak PBB', service_icon: 'https://nutech-integrasi.app/dummy.jpg', service_tariff: 40000 },
@@ -102,7 +100,11 @@ async function seedData() {
             }
         }
     }
-    console.log('Service data seeded successfully');
 }
 
-initializeDatabase();
+module.exports = {
+    initializeTestDatabase,
+    closeDatabaseConnection,
+    seedBannerData,
+    seedServiceData
+};

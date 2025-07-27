@@ -52,9 +52,8 @@ class User {
             last_name: this.last_name,
             email: this.email,
             profile_image: this.profile_image,
-            // Password is intentionally excluded for security
-            createdAt: this.createdAt,
-            updatedAt: this.updatedAt
+            created_at: this.createdAt,
+            updated_at: this.updatedAt
         };
     }
 }

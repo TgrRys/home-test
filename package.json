@@ -4,15 +4,18 @@
     "description": "Express.js backend with PostgreSQL database following clean architecture",
     "main": "src/index.js",
     "scripts": {
-        "start": "node src/index.js",
-        "dev": "nodemon src/index.js",
-        "test": "jest",
-        "test:watch": "jest --watch",
-        "test:coverage": "jest --coverage",
-        "test:sequential": "node scripts/run-tests-sequential.js",
-        "db:init": "node scripts/initDb.js"
+        "setup:prod": "NODE_ENV=production DB_NAME=home_test_db node scripts/setupDb.js",
+        "setup:dev": "NODE_ENV=development DB_NAME=home_test_db_test node scripts/setupDb.js",
+        "start": "npm run setup:prod && NODE_ENV=production DB_NAME=home_test_db node src/index.js",
+        "dev": "npm run setup:dev && NODE_ENV=development DB_NAME=home_test_db_test nodemon src/index.js",
+        "test": "NODE_ENV=test DB_NAME=home_test_db_test jest",
+        "test:watch": "NODE_ENV=test DB_NAME=home_test_db_test jest --watch",
+        "test:coverage": "NODE_ENV=test DB_NAME=home_test_db_test jest --coverage",
+        "test:sequential": "NODE_ENV=test DB_NAME=home_test_db_test node scripts/run-tests-sequential.js",
+        "db:init": "NODE_ENV=development DB_NAME=home_test_db node scripts/initDb.js"
     },
     "dependencies": {
+        "bcrypt": "^5.1.1",
         "cors": "^2.8.5",
         "dotenv": "^16.3.1",
         "express": "^4.18.2",
@@ -22,8 +25,7 @@
         "morgan": "^1.10.0",
         "multer": "^2.0.2",
         "pg": "^8.11.3",
-        "pg-hstore": "^2.3.4",
-        "sequelize": "^6.35.2"
+        "uuid": "^9.0.1"
     },
     "devDependencies": {
         "jest": "^29.7.0",

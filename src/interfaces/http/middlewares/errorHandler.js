@@ -7,9 +7,8 @@
 const errorHandler = (err, req, res, next) => {
     console.error(err.stack);
 
-    // Format error response according to the API spec
     const errorResponse = {
-        status: err.errorCode || 999, // Default error code
+        status: err.errorCode || 999, 
         message: err.message || 'An unexpected error occurred',
         data: null
     };

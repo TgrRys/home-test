@@ -28,9 +28,8 @@ class AuthController {
             res.status(200).json(result);
         } catch (error) {
             console.error('Registration error:', error);
-            // Format error response according to the API spec
             const errorResponse = {
-                status: error.errorCode || 999, // Default error code
+                status: error.errorCode || 999, 
                 message: error.message || 'An unexpected error occurred',
                 data: null
             };
@@ -57,9 +56,8 @@ class AuthController {
             res.status(200).json(result);
         } catch (error) {
             console.error('Login error:', error);
-            // Format error response according to the API spec
             const errorResponse = {
-                status: error.errorCode || 999, // Default error code
+                status: error.errorCode || 999, 
                 message: error.message || 'An unexpected error occurred',
                 data: null
             };
