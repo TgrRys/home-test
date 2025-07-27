@@ -9,6 +9,7 @@ yarn.lock
 .env.development.local
 .env.test.local
 .env.production.local
+.env.railway
 
 # Logs
 logs
@@ -36,3 +37,24 @@ build/
 *.swp
 *.swo
 .DS_Store
+
+# Database
+*.sqlite
+*.db
+
+# Temporary files
+tmp/
+temp/
+.tmp/
+
+# Railway CLI
+.railway/
+
+# JWT secrets and keys
+*.pem
+*.key
+private/
+
+# OS generated files
+Thumbs.db
+ehthumbs.db
