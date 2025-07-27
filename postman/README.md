@@ -10,6 +10,7 @@ This folder contains Postman collections and environments for testing the Home T
 ### 🌍 Environments  
 - **`Home-Test-Development.postman_environment.json`** - Development environment (localhost:3000)
 - **`Home-Test-Production.postman_environment.json`** - Production environment template
+- **`Home-Test-Railway.postman_environment.json`** - Railway deployment environment
 
 ## How to Import
 
@@ -24,6 +25,7 @@ This folder contains Postman collections and environments for testing the Home T
 2. Select the environment files:
    - `Home-Test-Development.postman_environment.json`  
    - `Home-Test-Production.postman_environment.json`
+   - `Home-Test-Railway.postman_environment.json`
 3. Click **Import**
 
 ## Usage Instructions
@@ -96,6 +98,14 @@ The development environment includes pre-configured admin credentials:
 
 ### Production Environment  
 Update the production environment with your actual production URL and credentials.
+
+### Railway Environment  
+For Railway deployment:
+1. Update `base_url` to your Railway app URL: `https://your-app-name.up.railway.app/api`
+2. Use the same admin credentials: `admin@example.com` / `admin123456`
+3. Test the health check endpoint first to verify deployment
+
+**📖 Complete Railway deployment guide:** See [../RAILWAY_DEPLOYMENT.md](../RAILWAY_DEPLOYMENT.md)
 
 ## Features
 

@@ -4,11 +4,35 @@ const { Pool } = require('pg');
 const DatabaseSchema = require('../src/infrastructure/database/schema/DatabaseSchema');
 
 async function setupDatabase() {
-    const dbName = process.env.DB_NAME;
+    const dbName = process.env.DATABASE_URL ? 
+        new URL(process.env.DATABASE_URL).pathname.slice(1) : 
+        process.env.DB_NAME;
     const environment = process.env.NODE_ENV || 'development';
 
     console.log(`Setting up database: ${dbName} for ${environment} environment...`);
 
+    // If DATABASE_URL is provided (Railway), use it directly
+    if (process.env.DATABASE_URL) {
+        const pool = new Pool({
+            connectionString: process.env.DATABASE_URL,
+            ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false
+        });
+
+        try {
+            console.log('Using Railway database connection...');
+            await setupTables(pool);
+            await seedData(pool, environment);
+            console.log('Database setup completed successfully!');
+        } catch (error) {
+            console.error('Database setup failed:', error);
+            throw error;
+        } finally {
+            await pool.end();
+        }
+        return;
+    }
+
+    // Local development setup
     const adminPool = new Pool({
         host: process.env.DB_HOST || 'localhost',
         port: process.env.DB_PORT || 5432,

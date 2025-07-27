@@ -725,6 +725,27 @@ All tests follow these principles:
 - **Error Scenario Coverage** - Invalid inputs, unauthorized access, insufficient balance
 - **Data Integrity** - Transaction atomicity and balance consistency validation
 
+## Deployment
+
+### Railway (Free Hosting)
+
+This project is ready for free deployment on Railway with PostgreSQL database included.
+
+**Quick Deploy:**
+1. Push your code to GitHub
+2. Connect your GitHub repo to Railway
+3. Add a PostgreSQL database service
+4. Set environment variables (NODE_ENV, JWT_SECRET)
+5. Deploy automatically!
+
+**📖 Complete deployment guide:** See [RAILWAY_DEPLOYMENT.md](RAILWAY_DEPLOYMENT.md) for step-by-step instructions.
+
+**✅ Production Ready Features:**
+- Automatic database setup and seeding
+- Railway PostgreSQL integration with SSL
+- Health check endpoint for monitoring
+- Production-optimized configuration
+
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
