@@ -20,6 +20,7 @@ async function setupDatabase() {
 
         try {
             console.log('Using Railway database connection...');
+            await migrateExistingTables(pool);
             await setupTablesRailway(pool);
             await seedDataRailway(pool, environment);
             console.log('Database setup completed successfully!');
@@ -246,13 +247,47 @@ async function seedInitialData() {
 //     }
 // }
 
+async function migrateExistingTables(pool) {
+    console.log('Checking for required table migrations...');
+
+    try {
+        const checkTableQuery = `
+            SELECT column_name 
+            FROM information_schema.columns 
+            WHERE table_name = 'transactions';
+        `;
+
+        const result = await pool.query(checkTableQuery);
+        const existingColumns = result.rows.map(row => row.column_name);
+
+        if (existingColumns.length > 0) {
+            console.log('Existing transactions columns:', existingColumns);
+
+            if (!existingColumns.includes('service_code')) {
+                console.log('Adding missing service_code column...');
+                await pool.query('ALTER TABLE transactions ADD COLUMN service_code VARCHAR(50)');
+            }
+
+            if (!existingColumns.includes('service_name')) {
+                console.log('Adding missing service_name column...');
+                await pool.query('ALTER TABLE transactions ADD COLUMN service_name VARCHAR(255)');
+            }
+
+            if (!existingColumns.includes('updated_at')) {
+                console.log('Adding missing updated_at column...');
+                await pool.query('ALTER TABLE transactions ADD COLUMN updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP');
+            }
+
+            console.log('✅ Transactions table migration completed');
+        }
+    } catch (error) {
+        console.log('Migration check completed (table may not exist yet):', error.message);
+    }
+}
+
 async function setupTablesRailway(pool) {
     console.log('Creating database tables...');
 
-    // Use direct SQL queries instead of DatabaseSchema methods
-    // since we're using a different pool
-
-    // Create users table
     await pool.query(`
         CREATE TABLE IF NOT EXISTS users (
             id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -266,7 +301,6 @@ async function setupTablesRailway(pool) {
         )
     `);
 
-    // Create banners table
     await pool.query(`
         CREATE TABLE IF NOT EXISTS banners (
             id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -278,7 +312,6 @@ async function setupTablesRailway(pool) {
         )
     `);
 
-    // Create services table
     await pool.query(`
         CREATE TABLE IF NOT EXISTS services (
             id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -291,7 +324,6 @@ async function setupTablesRailway(pool) {
         )
     `);
 
-    // Create balances table
     await pool.query(`
         CREATE TABLE IF NOT EXISTS balances (
             id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -302,17 +334,18 @@ async function setupTablesRailway(pool) {
         )
     `);
 
-    // Create transactions table
     await pool.query(`
         CREATE TABLE IF NOT EXISTS transactions (
             id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+            invoice_number VARCHAR(50) UNIQUE NOT NULL,
             user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-            service_id UUID REFERENCES services(id),
-            invoice_number VARCHAR(255) UNIQUE NOT NULL,
-            transaction_type VARCHAR(50) NOT NULL,
-            description VARCHAR(255) NOT NULL,
+            service_code VARCHAR(50),
+            service_name VARCHAR(255),
+            transaction_type VARCHAR(20) NOT NULL CHECK (transaction_type IN ('TOPUP', 'PAYMENT')),
             total_amount BIGINT NOT NULL,
-            created_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            description TEXT,
+            created_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         )
     `);
 
@@ -325,7 +358,6 @@ async function seedDataRailway(pool, environment) {
 
     console.log('Seeding initial data...');
 
-    // Create admin user
     const hashedPassword = await bcrypt.hash('admin123456', 10);
     const userId = uuidv4();
 
@@ -342,14 +374,12 @@ async function seedDataRailway(pool, environment) {
         'https://yoururlapi.com/profile.jpeg'
     ]);
 
-    // Create user balance
     await pool.query(`
         INSERT INTO balances (user_id, balance)
         VALUES ($1, $2)
         ON CONFLICT (user_id) DO NOTHING
     `, [userId, 0]);
 
-    // Seed banners
     const banners = [
         {
             banner_name: 'Banner 1',
@@ -391,7 +421,6 @@ async function seedDataRailway(pool, environment) {
         `, [banner.banner_name, banner.banner_image, banner.description]);
     }
 
-    // Seed services
     const services = [
         {
             service_code: 'PAJAK',
