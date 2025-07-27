@@ -1,4 +1,4 @@
-# Home Test API ✅ LIVE
+# Home Test Nutech
 
 A complete RESTful API backend built with Express.js and PostgreSQL following clean architecture principles. This API provides comprehensive user management, transaction processing, and information services with full testing coverage and ready-to-use Postman collections.
 
