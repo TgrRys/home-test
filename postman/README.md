@@ -10,7 +10,7 @@ This folder contains Postman collections and environments for testing the Home T
 ### 🌍 Environments  
 - **`Home-Test-Development.postman_environment.json`** - Development environment (localhost:3000)
 - **`Home-Test-Production.postman_environment.json`** - Production environment template
-- **`Home-Test-Railway.postman_environment.json`** - Railway deployment environment
+- **`Home-Test-Railway.postman_environment.json`** - **🚀 Live Railway deployment** (https://athletic-optimism-production.up.railway.app)
 
 ## How to Import
 
@@ -96,7 +96,22 @@ The development environment includes pre-configured admin credentials:
 | `test_user_email` | `test@example.com` | Test user email |
 | `test_user_password` | `password123` | Test user password |
 
-### Production Environment  
+### Railway Production Environment ✅ LIVE
+| Variable | Value | Description |
+|----------|-------|-------------|
+| `base_url` | `https://athletic-optimism-production.up.railway.app/api` | **Live Railway API** |
+| `jwt_token` | (auto-set) | JWT token from login |
+| `user_email` | `admin@example.com` | Admin email (create if needed) |
+| `user_password` | `admin123456` | Admin password |
+
+**🚀 Quick Test Railway Production:**
+1. Select "Home Test - Railway" environment
+2. Test health check: GET `/health`
+3. Register new user: POST `/registration`
+4. Login: POST `/login` 
+5. Test protected endpoints with JWT token
+
+### Production Environment Template
 Update the production environment with your actual production URL and credentials.
 
 ### Railway Environment  

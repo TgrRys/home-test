@@ -1,6 +1,8 @@
-# Home Test API
+# Home Test API ✅ LIVE
 
 A complete RESTful API backend built with Express.js and PostgreSQL following clean architecture principles. This API provides comprehensive user management, transaction processing, and information services with full testing coverage and ready-to-use Postman collections.
+
+**🚀 Live Production API:** `https://athletic-optimism-production.up.railway.app/api`
 
 ## Features
 
@@ -12,7 +14,7 @@ A complete RESTful API backend built with Express.js and PostgreSQL following cl
 - **PostgreSQL Integration** - Robust database layer with prepared statements
 - **Comprehensive Testing** - 41 integration tests with 100% API coverage
 - **Postman Collections** - Ready-to-use API testing environments
-- **Production Ready** - Complete documentation and deployment configurations
+- **Railway Deployment** - ✅ **Live on Railway with free PostgreSQL**
 
 ## Project Structure
 
@@ -490,18 +492,24 @@ For testing transactions, use these service codes:
 
 Ready-to-use Postman collections are included in the `postman/` folder:
 
-### Quick Start with Postman
+### 🚀 Quick Start with Live Railway API
 1. Import `postman/Home-Test-API.postman_collection.json`
-2. Import `postman/Home-Test-Development.postman_environment.json`
-3. Select "Home Test - Development" environment
-4. Use the pre-configured admin user:
+2. Import `postman/Home-Test-Railway.postman_environment.json`
+3. Select **"Home Test - Railway"** environment
+4. Test live production API at: `https://athletic-optimism-production.up.railway.app/api`
+
+### 💻 Local Development Setup
+1. Import `postman/Home-Test-Development.postman_environment.json`
+2. Select "Home Test - Development" environment
+3. Use the pre-configured admin user:
    - **Email**: `admin@example.com`
    - **Password**: `admin123456`
 
 ### What's Included
 - ✅ **Complete API Collection** - All 15+ endpoints with examples
 - ✅ **Auto JWT Management** - Tokens automatically captured and used
-- ✅ **Pre-configured Environments** - Development and production ready
+- ✅ **Live Railway Environment** - Production API ready to test
+- ✅ **Development Environment** - Local testing configuration
 - ✅ **Test Scripts** - Basic response validation included
 - ✅ **Documentation** - Comprehensive usage guides
 
@@ -727,24 +735,39 @@ All tests follow these principles:
 
 ## Deployment
 
-### Railway (Free Hosting)
+### Railway (Free Hosting) ✅ DEPLOYED
 
-This project is ready for free deployment on Railway with PostgreSQL database included.
+This project is **successfully deployed** on Railway with PostgreSQL database.
 
-**Quick Deploy:**
-1. Push your code to GitHub
-2. Connect your GitHub repo to Railway
-3. Add a PostgreSQL database service
-4. Set environment variables (NODE_ENV, JWT_SECRET)
-5. Deploy automatically!
+**🚀 Live Production API:** `https://athletic-optimism-production.up.railway.app/api`
 
-**📖 Complete deployment guide:** See [RAILWAY_DEPLOYMENT.md](RAILWAY_DEPLOYMENT.md) for step-by-step instructions.
+**Quick Test Live API:**
+```bash
+# Health Check
+curl https://athletic-optimism-production.up.railway.app/api/health
 
-**✅ Production Ready Features:**
-- Automatic database setup and seeding
-- Railway PostgreSQL integration with SSL
-- Health check endpoint for monitoring
-- Production-optimized configuration
+# Get Banners (no auth required)
+curl https://athletic-optimism-production.up.railway.app/api/banner
+
+# Register New User
+curl -X POST https://athletic-optimism-production.up.railway.app/api/registration \
+  -H "Content-Type: application/json" \
+  -d '{"email": "your-email@example.com", "first_name": "Your", "last_name": "Name", "password": "yourpassword"}'
+```
+
+**📱 Ready-to-Use Postman:**
+- Import `postman/Home-Test-Railway.postman_environment.json`
+- Select "Home Test - Railway" environment
+- Base URL: `https://athletic-optimism-production.up.railway.app/api`
+
+**✅ Deployment Features:**
+- ✅ **Live PostgreSQL Database** - Fully initialized with seed data
+- ✅ **SSL Certificates** - Automatic HTTPS
+- ✅ **Health Monitoring** - `/api/health` endpoint active
+- ✅ **Auto-scaling** - Railway manages server resources
+- ✅ **GitHub Integration** - Auto-deploy on push
+
+**📖 Complete deployment guide:** See [RAILWAY_DEPLOYMENT.md](RAILWAY_DEPLOYMENT.md) for step-by-step CLI instructions.
 
 ## License
 

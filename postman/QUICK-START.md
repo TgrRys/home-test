@@ -1,16 +1,34 @@
 # Home Test API - Postman Quick Start
 
-## 🚀 Quick Import & Test
+## 🚀 Test Live Railway API (Recommended)
 
 ### 1. Import Files
 Drag and drop these files into Postman:
 - `Home-Test-API.postman_collection.json`
-- `Home-Test-Development.postman_environment.json`
+- `Home-Test-Railway.postman_environment.json`
+
+### 2. Select Environment
+Choose **"Home Test - Railway"** from the environment dropdown
+
+### 3. Test Live Production API (30 seconds)
+1. **Register User** → Create your account on live API
+2. **Login User** → Get JWT token automatically  
+3. **Get Profile** → Verify authentication works
+4. **Get Balance** → Check initial balance
+
+**🌐 Live API URL:** `https://athletic-optimism-production.up.railway.app/api`
+
+---
+
+## 💻 Local Development Testing
+
+### 1. Import Development Environment
+Drag and drop: `Home-Test-Development.postman_environment.json`
 
 ### 2. Select Environment
 Choose **"Home Test - Development"** from the environment dropdown
 
-### 3. Test Authentication (30 seconds)
+### 3. Test Local API (30 seconds)
 1. **Login User** → Get JWT token automatically
 2. **Get Profile** → Verify authentication works
 3. **Get Balance** → Check initial balance
@@ -25,7 +43,7 @@ Choose **"Home Test - Development"** from the environment dropdown
 
 ---
 
-## 📋 Pre-configured Admin User
+## 📋 Pre-configured Admin User (Development)
 - **Email:** `admin@example.com`
 - **Password:** `admin123456`
 
