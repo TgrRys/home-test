@@ -12,8 +12,7 @@
         "test:watch": "NODE_ENV=test DB_NAME=home_test_db_test jest --watch",
         "test:coverage": "NODE_ENV=test DB_NAME=home_test_db_test jest --coverage",
         "test:sequential": "NODE_ENV=test DB_NAME=home_test_db_test node scripts/run-tests-sequential.js",
-        "db:init": "NODE_ENV=development DB_NAME=home_test_db node scripts/initDb.js",
-        "postinstall": "npm run setup:prod"
+        "db:init": "NODE_ENV=development DB_NAME=home_test_db node scripts/initDb.js"
     },
     "dependencies": {
         "bcrypt": "^5.1.1",
