@@ -4,8 +4,8 @@ const { Pool } = require('pg');
 const DatabaseSchema = require('../src/infrastructure/database/schema/DatabaseSchema');
 
 async function setupDatabase() {
-    const dbName = process.env.DATABASE_URL ? 
-        new URL(process.env.DATABASE_URL).pathname.slice(1) : 
+    const dbName = process.env.DATABASE_URL ?
+        new URL(process.env.DATABASE_URL).pathname.slice(1) :
         process.env.DB_NAME;
     const environment = process.env.NODE_ENV || 'development';
 
@@ -248,23 +248,83 @@ async function seedInitialData() {
 
 async function setupTablesRailway(pool) {
     console.log('Creating database tables...');
-    
-    // Create all tables using the DatabaseSchema
-    await pool.query(DatabaseSchema.getUsersTable());
-    await pool.query(DatabaseSchema.getBalancesTable());
-    await pool.query(DatabaseSchema.getBannersTable());
-    await pool.query(DatabaseSchema.getServicesTable());
-    await pool.query(DatabaseSchema.getTransactionsTable());
-    
+
+    // Use direct SQL queries instead of DatabaseSchema methods
+    // since we're using a different pool
+
+    // Create users table
+    await pool.query(`
+        CREATE TABLE IF NOT EXISTS users (
+            id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+            first_name VARCHAR(100) NOT NULL,
+            last_name VARCHAR(100) NOT NULL,
+            email VARCHAR(255) UNIQUE NOT NULL,
+            password VARCHAR(255) NOT NULL,
+            profile_image VARCHAR(500) DEFAULT 'https://yoururlapi.com/profile.jpeg',
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )
+    `);
+
+    // Create banners table
+    await pool.query(`
+        CREATE TABLE IF NOT EXISTS banners (
+            id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+            banner_name VARCHAR(255) UNIQUE NOT NULL,
+            banner_image VARCHAR(500) NOT NULL,
+            description TEXT,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )
+    `);
+
+    // Create services table
+    await pool.query(`
+        CREATE TABLE IF NOT EXISTS services (
+            id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+            service_code VARCHAR(50) UNIQUE NOT NULL,
+            service_name VARCHAR(255) NOT NULL,
+            service_icon VARCHAR(500) NOT NULL,
+            service_tariff INTEGER NOT NULL,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )
+    `);
+
+    // Create balances table
+    await pool.query(`
+        CREATE TABLE IF NOT EXISTS balances (
+            id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+            user_id UUID UNIQUE NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+            balance BIGINT DEFAULT 0,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )
+    `);
+
+    // Create transactions table
+    await pool.query(`
+        CREATE TABLE IF NOT EXISTS transactions (
+            id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+            user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+            service_id UUID REFERENCES services(id),
+            invoice_number VARCHAR(255) UNIQUE NOT NULL,
+            transaction_type VARCHAR(50) NOT NULL,
+            description VARCHAR(255) NOT NULL,
+            total_amount BIGINT NOT NULL,
+            created_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )
+    `);
+
     console.log('Database tables created successfully');
 }
 
 async function seedDataRailway(pool, environment) {
     const bcrypt = require('bcrypt');
     const { v4: uuidv4 } = require('uuid');
-    
+
     console.log('Seeding initial data...');
-    
+
     // Create admin user
     const hashedPassword = await bcrypt.hash('admin123456', 10);
     const userId = uuidv4();
